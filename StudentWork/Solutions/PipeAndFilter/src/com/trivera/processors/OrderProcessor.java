@@ -4,9 +4,11 @@ import java.util.concurrent.Flow.*;
 import java.util.concurrent.SubmissionPublisher;
 import java.util.function.Function;
 
-public class OrderProcessor<T,R> extends SubmissionPublisher<R> implements Processor<T, R> {
+public class OrderProcessor<T,R>
+        extends SubmissionPublisher<R>
+        implements Processor<T, R> {
 
-    private Function function;
+    private Function<? super T, ? extends R> function;
     private Subscription subscription;
 
     public OrderProcessor(Function<? super T, ? extends R> function) {

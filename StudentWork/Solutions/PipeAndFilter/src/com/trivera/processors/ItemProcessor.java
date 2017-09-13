@@ -5,9 +5,11 @@ import java.util.concurrent.Flow.Subscription;
 import java.util.concurrent.SubmissionPublisher;
 import java.util.function.Function;
 
-public class ItemProcessor<T,R> extends SubmissionPublisher<R> implements Processor<T, R> {
+public class ItemProcessor<T,R>
+        extends SubmissionPublisher<R>
+        implements Processor<T, R> {
 
-    private Function function;
+    private Function<? super T, ? extends R> function;
     private Subscription subscription;
 
     public ItemProcessor(Function<? super T, ? extends R> function) {
@@ -23,6 +25,7 @@ public class ItemProcessor<T,R> extends SubmissionPublisher<R> implements Proces
 
     @Override
     public void onNext(T item) {
+        System.out.println("apply Function and submit : " + item);
         submit((R) function.apply(item));
         subscription.request(1);
     }

@@ -1,31 +1,36 @@
 package com.trivera;
 
 import com.trivera.subscriber.SubscriberOne;
-import com.trivera.subscriber.SubscriberTwo;
 
 import java.util.List;
 import java.util.concurrent.SubmissionPublisher;
 
-public class PubSubTest {
+public class ReactiveTest {
 
     public static void main(String[] args){
 
-        // Create Publisher
+        /*
+         * Create standard SubmissionPublisher
+         */
         SubmissionPublisher<String> publisher = new SubmissionPublisher<>();
 
-        // Register SubscriberOne
+        /*
+         * Create custom Subscriber
+         */
         SubscriberOne<String> subscriber = new SubscriberOne<>();
+
+        /*
+         * Register custom Subscriber with Publisher
+         */
         publisher.subscribe(subscriber);
 
-        // Register SubscriberOne
-        SubscriberTwo<String> subscriber2 = new SubscriberTwo<>(3);
-        publisher.subscribe(subscriber2);
-
-        // Publish items
+        /*
+         * Publish items to Subscribers
+         */
         System.out.println("Publishing Items...");
 
         List.of("3", "x", "2", "x", "1", "x")
-                .forEach(i -> publisher.submit(i));
+                .forEach(publisher::submit);
 
         publisher.close();
 

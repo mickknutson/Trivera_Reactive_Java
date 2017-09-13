@@ -10,14 +10,24 @@ public class ReactiveTest {
 
     public static void main(String[] args){
 
-        // Create Publisher
+        /*
+         * Create standard SubmissionPublisher
+         */
         SubmissionPublisher<String> publisher = new SubmissionPublisher<>();
 
-        // Register SubscriberOne
+        /*
+         * Create custom Subscriber
+         */
         SubscriberOne<String> subscriber = new SubscriberOne<>();
+
+        /*
+         * Register custom Subscriber with Publisher
+         */
         publisher.subscribe(subscriber);
 
-        // Publish items
+        /*
+         * Publish items to Subscribers
+         */
         System.out.println("Publishing Items...");
 
         List.of("3", "x", "2", "x", "1", "x")

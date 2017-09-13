@@ -3,37 +3,56 @@ package com.trivera.subscriber;
 import java.util.concurrent.Flow.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * {@inheritDoc}
+ */
 public class SubscriberOne<T> implements Subscriber<T> {
 
     private Subscription subscription;
 
     AtomicInteger count = new AtomicInteger();
 
+    /**
+     * {@inheritDoc}
+     * @param subscription a new subscription
+     */
     @Override
     public void onSubscribe(Subscription subscription) {
         this.subscription = subscription;
-        subscription.request(1); // a value of  Long.MAX_VALUE may be considered as effectively unbounded
+        subscription.request(1);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param item the item
+     */
     @Override
     public void onNext(T item) {
-        System.out.println("next["
-                + count.getAndIncrement()
-                + "] : "
-                + "type["
-                + item.getClass()
-                + "] : "
-                + item);
+        System.out.println("next : " + item);
+//        System.out.println("next["
+//                + count.getAndIncrement()
+//                + "] : "
+//                + "type["
+//                + item.getClass()
+//                + "] : "
+//                + item);
 
         /*
-         * Value < 1 == Subscriber does not want to receive anymore messages
-         * Value > 0 == Subscriber wants to receive more messages
+         * request < 1 == doesn't want to receive anymore messages
+         * request > 0 == wants to receive more messages
+         *
+         * Long.MAX_VALUE is considered as effectively unbounded
          */
-        subscription.request(1); // a value of  Long.MAX_VALUE may be considered as effectively unbounded
+        subscription.request(1);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param t the exception
+     */
     @Override
     public void onError(Throwable t) {
+        // Handle Throwable
         t.printStackTrace();
 
         /*
@@ -46,9 +65,12 @@ public class SubscriberOne<T> implements Subscriber<T> {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onComplete() {
-        System.out.println("CYA !!!");
+        System.out.println("done...");
 
         /*
          * Using the Object's wait() and notifyAll() methods to cause the main thread
