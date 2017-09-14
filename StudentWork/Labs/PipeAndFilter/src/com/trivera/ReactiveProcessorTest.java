@@ -14,26 +14,29 @@ public class ReactiveProcessorTest {
         /*
          * Lab: Instantiate standard SubmissionPublisher
          */
-        SubmissionPublisher<String> publisher = new SubmissionPublisher<>();
+
+
 
         /*
          * Lab: Instantiate custom Filter Processor
          * Use the lambda Predicate "s -> s.equals("x")" and the constructor
          */
-        ItemFilterProcessor<String, String> filter = new ItemFilterProcessor<>(s -> s.equals("x"));
+
+
 
 
         /*
-         * Lab: Register Processor with publisher
+         * Lab: Register Filter Processor with publisher
          */
-        publisher.subscribe(filter);
+
 
 
         /*
          * Lab: Instantiate custom Item Transformer Processor
          * Use the lambda Function "Integer::parseInt" and the constructor
          */
-        ItemTransformerProcessor<String, Integer> transformer = new ItemTransformerProcessor<>(Integer::parseInt);
+
+
 
 
 
@@ -41,18 +44,20 @@ public class ReactiveProcessorTest {
          * Lab: Register Processor with previous Filter Processor,
          * not the original publisher
          */
-        filter.subscribe(transformer);
+
+
 
 
         /*
          * Lab: Instantiate custom Subscriber
          */
-        SubscriberOne<Integer> subscriber = new SubscriberOne<>();
+
+
+
 
         /*
          * Lab: Register custom Subscriber with previous Transformer Processor
          */
-        transformer.subscribe(subscriber);
 
 
 

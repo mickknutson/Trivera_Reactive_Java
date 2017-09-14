@@ -5,17 +5,33 @@ import java.util.concurrent.Flow.Subscription;
 import java.util.concurrent.SubmissionPublisher;
 import java.util.function.Function;
 
-public class ItemProcessor<T,R>
+/**
+ * {@inheritDoc}
+ */
+public class ItemTransformerProcessor<T,R>
         extends SubmissionPublisher<R>
         implements Processor<T, R> {
 
-    private Function<? super T, ? extends R> function;
-    private Subscription subscription;
+    /*
+     * Lab: Create member variable for lambda Function
+     */
 
-    public ItemProcessor(Function<? super T, ? extends R> function) {
+
+
+
+    /*
+     * Lab: Create member variable for Subscription
+     */
+
+
+
+
+    public ItemTransformerProcessor(Function<? super T, ? extends R> function) {
         super();
         this.function = function;
     }
+
+
 
     @Override
     public void onSubscribe(Subscription subscription) {
@@ -23,11 +39,32 @@ public class ItemProcessor<T,R>
         subscription.request(1);
     }
 
+
+
+
     @Override
     public void onNext(T item) {
-        System.out.println("apply Function and submit : " + item);
-        submit((R) function.apply(item));
-        subscription.request(1);
+
+
+        /*
+         * Lab: Print out item to console
+         */
+
+
+
+        /*
+         * Lab: Submit the item that has the lambda function applied, and converted
+         * to (R) return type.
+         */
+
+
+
+        /*
+         * Lab: request more messages from the subscription
+         */
+
+
+
     }
 
     @Override

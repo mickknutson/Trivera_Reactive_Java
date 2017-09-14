@@ -3,19 +3,19 @@ package com.trivera.processors;
 import java.util.concurrent.Flow.Processor;
 import java.util.concurrent.Flow.Subscription;
 import java.util.concurrent.SubmissionPublisher;
-import java.util.function.Predicate;
+import java.util.function.Function;
 
 /**
  * {@inheritDoc}
  */
-public class ItemFilterProcessor<T,R>
+public class ItemTransformerProcessor<T,R>
         extends SubmissionPublisher<R>
         implements Processor<T, R> {
 
     /*
-     * Lab: Create member variable for lambda Predicate
+     * Lab: Create member variable for lambda Function
      */
-    private Predicate<? super T> predicate;
+    private Function<? super T, ? extends R> function;
 
 
     /*
@@ -23,11 +23,12 @@ public class ItemFilterProcessor<T,R>
      */
     private Subscription subscription;
 
-
-    public ItemFilterProcessor(Predicate<? super T> predicate) {
+    public ItemTransformerProcessor(Function<? super T, ? extends R> function) {
         super();
-        this.predicate = predicate;
+        this.function = function;
     }
+
+
 
     @Override
     public void onSubscribe(Subscription subscription) {
@@ -41,21 +42,18 @@ public class ItemFilterProcessor<T,R>
     @Override
     public void onNext(T item) {
 
-        /*
-         * Lab: Test to ensure the item is not (!) true
-         * Then submit the item, casting it to (R) return type
-         */
-        if(! predicate.test(item)) {
-            submit((R) item);
-        }
 
         /*
-         * Lab: Add else clause to print which items where filtered out
+         * Lab: Print out item to console
          */
-        else {
-            System.out.println("item filtered out : " + item);
-        }
+        System.out.println("apply Function and submit : " + item);
 
+
+        /*
+         * Lab: Submit the item that has the lambda function applied, and converted
+         * to (R) return type.
+         */
+        submit((R) function.apply(item));
 
 
         /*
@@ -73,4 +71,5 @@ public class ItemFilterProcessor<T,R>
     public void onComplete() {
         close();
     }
+
 }
