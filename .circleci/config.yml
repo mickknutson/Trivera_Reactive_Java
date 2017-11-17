@@ -5,6 +5,8 @@
 #
 # TO Revisit:
 # https://github.com/AnySoftKeyboard/AnySoftKeyboard/blob/master/circle.yml
+# To replicate this script in other Maven projects:
+# Must change the $BASE_DIR
 ##---------------------------------------------------------------------------##
 version: 2
 jobs:
@@ -31,21 +33,22 @@ jobs:
       - checkout
 
       - run:
-          environment:
-            SSH_TARGET: "localhost"
-            TEST_ENV: "linux"
+          name: Initialize
           command: |
             set -xu
+            echo $CIRCLE_WORKING_DIRECTORY
+            mkdir -p ~/junit/
+            mkdir -p ${TEST_REPORTS}
             pwd
             ls -la
-            ls -la ${LOCAL_REPO}
             ls -la ${BASE_DIR}
+            find . -maxdepth 2 -exec du -ms {} \; | sort -rn | head -n 15
 
       - run:
           name: Verify the Project
-#          command: mvn verify -Dmaven.repo.local=../../../Tools/local/repository
           command: mvn verify
           working_directory: ./StudentWork/code/oauth2-server/solution-code
+          # Does not seem to work:
 #          working_directory: $BASE_DIR
 
       - run:
@@ -60,12 +63,35 @@ jobs:
       - run:
           name: Save test results
           command: |
-            mkdir -p ~/junit/
+            set -xu
             find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} ~/junit/ \;
           when: always
+
+      - run:
+          name: Save Coverage results
+          command: |
+            set -xu
+            find . -type f -regex ".*/target/jacoco/.*xml" -exec cp {} ~/junit/ \;
+            bash <(curl -s https://codecov.io/bash)
+
+      - run:
+          name: listing after saving test results
+          command: |
+            set -xu
+            ls -la ~/junit
+
       - store_test_results:
+          name: Storing test results
           path: ~/junit
+
+      - run:
+          name: listing after Storing test results
+          command: |
+            set -xu
+            ls -la ~/junit
+
       - store_artifacts:
+          name: Storing Artifacts
           path: ~/junit
 
 
